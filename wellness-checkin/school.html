@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Health School</title>
+    <style>
+        :root {
+            --primary: #1fb6a6;
+            --primary-dark: #0f8d82;
+            --secondary: #ffb703;
+            --dark: #102a43;
+            --text: #23313f;
+            --light: #f3f8f9;
+            --white: #ffffff;
+            --border: rgba(16, 42, 67, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--text);
+            background: linear-gradient(180deg, #f5fffe 0%, #edf9f7 100%);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        .container {
+            width: min(1100px, calc(100% - 30px));
+            margin: 0 auto;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 80px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .logo-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+        }
+
+        .nav-btn,
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 14px 24px;
+            border-radius: 999px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .nav-btn:hover,
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(31, 182, 166, 0.28);
+        }
+
+        .hero {
+            padding: 70px 0 50px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 4.2rem);
+            line-height: 1.08;
+            margin: 0 0 20px;
+            color: var(--dark);
+        }
+
+        .hero h1 span {
+            color: var(--primary-dark);
+        }
+
+        .hero p {
+            font-size: 1.08rem;
+            line-height: 1.8;
+            color: #4a5866;
+            margin: 0 0 28px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .btn.secondary {
+            background: #e9faf8;
+            color: var(--dark);
+            border: 1px solid rgba(31, 182, 166, 0.2);
+        }
+
+        .stats {
+            display: flex;
+            gap: 26px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            min-width: 120px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 1.7rem;
+            color: var(--dark);
+        }
+
+        .stat span {
+            color: #5d6a78;
+            font-size: 0.95rem;
+        }
+
+        .hero-card {
+            background: linear-gradient(180deg, #ffffff 0%, #eefaf8 100%);
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            padding: 24px;
+            box-shadow: 0 30px 60px rgba(27, 76, 71, 0.08);
+        }
+
+        .image-box {
+            height: 440px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #dff8f4, #c7f1e8 40%, #f8f7ef 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-box::before,
+        .image-box::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .image-box::before {
+            width: 220px;
+            height: 220px;
+            background: rgba(255, 183, 3, 0.18);
+            right: -40px;
+            top: 20px;
+        }
+
+        .image-box::after {
+            width: 180px;
+            height: 180px;
+            background: rgba(31, 182, 166, 0.18);
+            left: -20px;
+            bottom: 20px;
+        }
+
+        .student-figure {
+            position: absolute;
+            inset: auto 80px 0 80px;
+            height: 320px;
+            background: linear-gradient(180deg, #113d4f 0%, #1d5b71 100%);
+            border-radius: 160px 160px 0 0;
+            box-shadow: inset 0 -18px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        .student-figure::before {
+            content: "";
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            background: #f8d7b6;
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -40px;
+            box-shadow: 0 0 0 12px #f3cda5;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 16px 20px;
+            box-shadow: 0 14px 25px rgba(16, 42, 67, 0.08);
+        }
+
+        .floating-card.one {
+            left: 22px;
+            bottom: 24px;
+        }
+
+        .floating-card.two {
+            right: 18px;
+            top: 30px;
+        }
+
+        .floating-card strong {
+            display: block;
+            color: var(--dark);
+            font-size: 1.3rem;
+        }
+
+        .floating-card span {
+            color: #5d6a78;
+            font-size: 0.82rem;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: clamp(2rem, 3vw, 3rem);
+            margin-bottom: 14px;
+            color: var(--dark);
+        }
+
+        .section-title p {
+            color: #586978;
+            max-width: 620px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .programs {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 28px 22px;
+            box-shadow: 0 10px 24px rgba(14, 44, 51, 0.04);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(31, 182, 166, 0.12), rgba(255, 183, 3, 0.12));
+            font-size: 1.7rem;
+            margin-bottom: 18px;
+        }
+
+        .card h3 {
+            margin: 0 0 12px;
+            color: var(--dark);
+            font-size: 1.4rem;
+        }
+
+        .card p {
+            color: #586978;
+            line-height: 1.8;
+            margin: 0 0 18px;
+        }
+
+        .link {
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .about {
+            background: linear-gradient(180deg, rgba(31, 182, 166, 0.08), rgba(31, 182, 166, 0.02));
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .about-visual {
+            background: linear-gradient(135deg, #dff8f4, #fdf6df);
+            min-height: 420px;
+            border-radius: 28px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .about-visual::before {
+            content: "";
+            position: absolute;
+            inset: 24px 24px auto auto;
+            width: 180px;
+            height: 180px;
+            background: rgba(31, 182, 166, 0.14);
+            border-radius: 50%;
+        }
+
+        .mini-panel {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 20px 30px rgba(16, 42, 67, 0.08);
+            padding: 18px 20px;
+        }
+
+        .mini-panel.top {
+            left: 24px;
+            top: 30px;
+        }
+
+        .mini-panel.bottom {
+            right: 26px;
+            bottom: 24px;
+        }
+
+        .mini-panel strong {
+            display: block;
+            color: var(--dark);
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+
+        .mini-panel span {
+            color: #5d6a78;
+        }
+
+        .about-text ul {
+            list-style: none;
+            padding: 0;
+            margin: 28px 0 0;
+            display: grid;
+            gap: 16px;
+        }
+
+        .about-text li {
+            display: flex;
+            gap: 12px;
+            align-items: start;
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .check {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: rgba(31, 182, 166, 0.15);
+            color: var(--primary-dark);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .schedule {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .schedule-item {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 26px 24px;
+        }
+
+        .schedule-item .day {
+            display: inline-block;
+            font-weight: 700;
+            color: var(--primary-dark);
+            background: rgba(31, 182, 166, 0.12);
+            padding: 8px 12px;
+            border-radius: 999px;
+            margin-bottom: 18px;
+        }
+
+        .schedule-item h3 {
+            margin: 0 0 12px;
+            color: var(--dark);
+        }
+
+        .schedule-item p {
+            margin: 0;
+            color: #586978;
+            line-height: 1.6;
+        }
+
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .quote {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        .quote p {
+            color: #4f5f6e;
+            line-height: 1.8;
+            margin: 0 0 16px;
+        }
+
+        .person {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c7f1e8, #ffe4a9);
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .person strong {
+            display: block;
+            color: var(--dark);
+        }
+
+        .person span {
+            color: #667587;
+            font-size: 0.85rem;
+        }
+
+        .contact {
+            background: linear-gradient(135deg, #0e2e3c, #18485e);
+            color: var(--white);
+        }
+
+        .contact-wrap {
+            display: grid;
+            grid-template-columns: 1fr 0.9fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .contact h2 {
+            margin-top: 0;
+            font-size: clamp(2rem, 3vw, 3rem);
+        }
+
+        .contact p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+        }
+
+        .contact-box {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+            padding: 24px;
+        }
+
+        .contact-box form {
+            display: grid;
+            gap: 14px;
+        }
+
+        .contact-box input,
+        .contact-box textarea {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--white);
+        }
+
+        .contact-box input::placeholder,
+        .contact-box textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .contact-box button {
+            width: fit-content;
+        }
+
+        footer {
+            background: #081d2a;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 20px 0;
+        }
+
+        .footer-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        @media (max-width: 900px) {
+
+            .hero-grid,
+            .about-grid,
+            .contact-wrap,
+            .programs,
+            .schedule,
+            .testimonials {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .hero {
+                padding-top: 40px;
+            }
+
+            .hero-actions,
+            .footer-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container nav">
+            <div class="logo">
+                <div class="logo-mark">H</div>
+                <span>Health School</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#programmes">Programmes</a>
+                <a href="#about">À propos</a>
+                <a href="#horaire">Horaire</a>
+                <a href="#temoignages">Témoignages</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            <a class="nav-btn" href="#contact">Inscription</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-grid">
+                <div>
+                    <h1>Apprenez le <span>bien-être</span> et la santé avec passion.</h1>
+                    <p>
+                        Health School forme les futurs professionnels de la santé, du sport et du bien-être
+                        avec des programmes pratiques, innovants et orientés vers l’avenir.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn" href="#programmes">Découvrir les cours</a>
+                        <a class="btn secondary" href="#about">Notre vision</a>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <strong>12+</strong>
+                            <span>années d’expertise</span>
+                        </div>
+                        <div class="stat">
+                            <strong>2.5k</strong>
+                            <span>étudiants formés</span>
+                        </div>
+                        <div class="stat">
+                            <strong>96%</strong>
+                            <span>de satisfaction</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-card">
+                    <div class="image-box">
+                        <div class="student-figure"></div>
+                        <div class="floating-card one">
+                            <strong>+450</strong>
+                            <span>formations pratiques</span>
+                        </div>
+                        <div class="floating-card two">
+                            <strong>4.9/5</strong>
+                            <span>avis étudiants</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="programmes">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Nos programmes</h2>
+                    <p>
+                        Des parcours conçus pour transformer les passions en compétences utiles,
+                        modernes et très demandées sur le marché de la santé et du bien-être.
+                    </p>
+                </div>
+
+                <div class="programs">
+                    <article class="card">
+                        <div class="card-icon">🩺</div>
+                        <h3>Soins infirmiers</h3>
+                        <p>
+                            Formation complète pour accompagner les patients avec professionnalisme,
+                            écoute et rigueur clinique.
+                        </p>
+                        <a href="#contact" class="link">En savoir plus</a>
+                    </article>
+
+                    <article class="card">
+                        <div class="card-icon">💪</div>
+                        <h3>Sport & fitness</h3>
+                        <p>
+                            Développez des compétences en préparation physique, coaching et prévention
+                            des blessures.
+                        </p>
+                        <a href="#contact" class="link">En savoir plus</a>
+                    </article>
+
+                    <article class="card">
+                        <div class="card-icon">🥗</div>
+                        <h3>Nutrition santé</h3>
+                        <p>
+                            Apprenez à guider les personnes vers une alimentation équilibrée, saine
+                            et adaptée à leurs besoins.
+                        </p>
+                        <a href="#contact" class="link">En savoir plus</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="about" id="about">
+            <div class="container about-grid">
+                <div class="about-visual">
+                    <div class="mini-panel top">
+                        <strong>1200+</strong>
+                        <span>stages supervisés</span>
+                    </div>
+                    <div class="mini-panel bottom">
+                        <strong>20</strong>
+                        <span>partenaires universitaires</span>
+                    </div>
+                </div>
+
+                <div class="about-text">
+                    <div class="section-title" style="text-align: left; margin-bottom: 0;">
+                        <h2>Une école axée sur l’excellence humaine et professionnelle</h2>
+                    </div>
+                    <p>
+                        Health School associe pédagogie moderne, encadrement professionnel et mise en
+                        situation réelle pour aider chaque étudiant à construire une carrière solide et épanouissante.
+                    </p>
+                    <ul>
+                        <li><span class="check">✓</span><span>Mentorat individuel avec des professionnels du
+                                secteur.</span></li>
+                        <li><span class="check">✓</span><span>Ateliers pratiques, simulations et projets
+                                collaboratifs.</span></li>
+                        <li><span class="check">✓</span><span>Approche centrée sur le développement durable et le
+                                bien-être.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="horaire">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Calendrier 2026</h2>
+                    <p>Des sessions structurées pour s’adapter à votre rythme et à vos objectifs.</p>
+                </div>
+
+                <div class="schedule">
+                    <article class="schedule-item">
+                        <span class="day">Lundi</span>
+                        <h3>Infirmier & soins</h3>
+                        <p>9h00 - 12h00 • Cours théoriques + exercices pratiques.</p>
+                    </article>
+
+                    <article class="schedule-item">
+                        <span class="day">Mercredi</span>
+                        <h3>Sport & coaching</h3>
+                        <p>14h00 - 17h00 • Entraînement, analyse physique et prévention.</p>
+                    </article>
+
+                    <article class="schedule-item">
+                        <span class="day">Vendredi</span>
+                        <h3>Nutrition & santé</h3>
+                        <p>10h00 - 13h00 • Suivi personnalisé et ateliers collectifs.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="temoignages">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Ils nous font confiance</h2>
+                    <p>La satisfaction de nos étudiants est au cœur de notre pédagogie.</p>
+                </div>
+
+                <div class="testimonials">
+                    <article class="quote">
+                        <p>“L’école m’a permis de transformer ma passion pour la santé en une vraie carrière
+                            professionnelle. J’ai appris autant en théorie qu’en pratique.”</p>
+                        <div class="person">
+                            <div class="avatar">A</div>
+                            <div>
+                                <strong>Amine K.</strong>
+                                <span>Étudiant en soins</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="quote">
+                        <p>“Un cadre très professionnel, des enseignants passionnés et des projets concrets qui motivent
+                            vraiment chaque semaine.”</p>
+                        <div class="person">
+                            <div class="avatar">S</div>
+                            <div>
+                                <strong>Sofia M.</strong>
+                                <span>Étudiante en nutrition</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="quote">
+                        <p>“Le plus important pour moi était d’avoir une formation utile, moderne et humaine. J’ai
+                            trouvé exactement cela à Health School.”</p>
+                        <div class="person">
+                            <div class="avatar">Y</div>
+                            <div>
+                                <strong>Yassine T.</strong>
+                                <span>Coach sportif</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact" id="contact">
+            <div class="container contact-wrap">
+                <div>
+                    <h2>Prêt à commencer votre parcours ?</h2>
+                    <p>
+                        Rejoignez Health School et donnez vie à votre vocation dans le domaine de
+                        la santé, du sport et du bien-être.
+                    </p>
+                </div>
+
+                <div class="contact-box">
+                    <form>
+                        <input type="text" placeholder="Nom complet" />
+                        <input type="email" placeholder="Email" />
+                        <textarea rows="4" placeholder="Votre message"></textarea>
+                        <button class="btn" type="submit">Envoyer</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-row">
+            <div>© 2026 Health School</div>
+            <div>Contact : contact@healthschool.com</div>
+        </div>
+    </footer>
+</body>
+
+</html>

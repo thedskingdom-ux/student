@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7f1ff" />
+  <title>How Are You, Really? — Wellness Check-in</title>
+  <style>
+    :root {
+      --ink: #302b3b;
+      --muted: #777184;
+      --lavender: #8b78b8;
+      --lavender-dark: #6f5b9e;
+      --lavender-soft: #eee8fa;
+      --cream: #fffdf9;
+      --line: #ece6f2;
+      --mint: #dff4e9;
+      --peach: #ffeadf;
+      --shadow: 0 18px 55px rgba(70, 52, 105, .10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, #f2e8ff 0, transparent 27rem),
+        radial-gradient(circle at 95% 35%, #e4f6ed 0, transparent 24rem),
+        #faf8fc;
+      font-family: Inter, ui-rounded, "Segoe UI", system-ui, -apple-system, sans-serif;
+      padding: 28px 16px 42px;
+    }
+
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(100%, 760px);
+      margin: 0 auto;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: var(--lavender-soft);
+      font-size: 21px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 12px;
+      background: rgba(255, 255, 255, .7);
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .7);
+      border-radius: 999px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .lang-btn.active {
+      background: var(--lavender-dark);
+      color: white;
+      box-shadow: 0 6px 14px rgba(111, 91, 158, 0.18);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 26px 12px 24px;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-size: 11px;
+      color: var(--lavender-dark);
+      font-weight: 800;
+    }
+
+    h1 {
+      font-size: clamp(34px, 7vw, 56px);
+      line-height: 1.02;
+      margin: 12px 0 14px;
+      letter-spacing: -.045em;
+    }
+
+    .hero p {
+      max-width: 520px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .card {
+      background: rgba(255, 253, 249, .93);
+      border: 1px solid rgba(236, 230, 242, .95);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: clamp(20px, 5vw, 34px);
+    }
+
+    .step-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .step-label strong {
+      font-size: 13px;
+    }
+
+    .step-label span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .progress {
+      height: 6px;
+      border-radius: 99px;
+      background: #f0ebf5;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .progress>div {
+      height: 100%;
+      width: 25%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #9b88c7, #78bfa5);
+      transition: width .35s ease;
+    }
+
+    .question {
+      font-size: clamp(22px, 4.8vw, 30px);
+      letter-spacing: -.025em;
+      margin: 0 0 8px;
+    }
+
+    .hint {
+      margin: 0 0 22px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .moods {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mood {
+      border: 1.5px solid var(--line);
+      border-radius: 20px;
+      background: white;
+      padding: 16px 8px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+      min-height: 125px;
+      color: var(--ink);
+      transition: transform .18s, border-color .18s, background .18s, box-shadow .18s;
+    }
+
+    .mood:hover {
+      transform: translateY(-3px);
+      border-color: #c8b9e7;
+    }
+
+    .mood.selected {
+      border-color: var(--lavender);
+      background: #f5f0ff;
+      box-shadow: 0 0 0 3px rgba(139, 120, 184, .13);
+    }
+
+    .sticker {
+      font-size: 37px;
+      line-height: 1;
+      filter: drop-shadow(0 4px 3px rgba(50, 30, 60, .08));
+    }
+
+    .mood strong {
+      font-size: 13px;
+    }
+
+    .mood small {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+    }
+
+    .choice {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      border: 1.5px solid var(--line);
+      border-radius: 15px;
+      padding: 14px 15px;
+      background: white;
+      color: var(--ink);
+      transition: border-color .18s, background .18s;
+    }
+
+    .choice:hover {
+      border-color: #c8b9e7;
+    }
+
+    .choice.selected {
+      border-color: var(--lavender);
+      background: #f5f0ff;
+    }
+
+    .choice .dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid #c9c0d7;
+      display: grid;
+      place-items: center;
+      flex: 0 0 18px;
+    }
+
+    .choice.selected .dot {
+      border-color: var(--lavender);
+    }
+
+    .choice.selected .dot::after {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--lavender);
+    }
+
+    .field {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: 15px;
+      padding: 14px;
+      resize: vertical;
+      min-height: 110px;
+      outline: none;
+      color: var(--ink);
+      background: white;
+    }
+
+    .field:focus {
+      border-color: var(--lavender);
+      box-shadow: 0 0 0 3px rgba(139, 120, 184, .13);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 19px;
+      font-weight: 750;
+    }
+
+    .btn.primary {
+      color: white;
+      background: var(--lavender-dark);
+      box-shadow: 0 7px 16px rgba(111, 91, 158, .2);
+    }
+
+    .btn.primary:hover {
+      background: #5f4b8f;
+    }
+
+    .btn.secondary {
+      color: var(--lavender-dark);
+      background: #f0ebf8;
+    }
+
+    .btn:disabled {
+      opacity: .42;
+      cursor: not-allowed;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .result-icon {
+      font-size: 64px;
+      margin: 6px 0 10px;
+      animation: float 2.8s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-2deg);
+      }
+
+      50% {
+        transform: translateY(-7px) rotate(2deg);
+      }
+    }
+
+    .result-title {
+      font-size: clamp(27px, 5vw, 38px);
+      margin: 6px 0 12px;
+      letter-spacing: -.035em;
+    }
+
+    .result-copy {
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 570px;
+      margin: 0 auto 20px;
+    }
+
+    .quote {
+      background: linear-gradient(135deg, #f2edfc, #eef8f2);
+      border-radius: 20px;
+      padding: 22px;
+      font-size: 18px;
+      line-height: 1.65;
+      margin: 22px 0;
+    }
+
+    .action-box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      text-align: left;
+    }
+
+    .action-box h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .action-box p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .privacy {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+      text-align: center;
+      margin: 20px 8px 0;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 22px 8px 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .fade-in {
+      animation: fadeIn .3s ease both;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 16px 12px 28px;
+      }
+
+      .topline {
+        margin-bottom: 10px;
+      }
+
+      .moods {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .mood {
+        min-height: 112px;
+      }
+
+      .card {
+        border-radius: 22px;
+      }
+
+      .actions .btn {
+        flex: 1;
+        padding: 13px 12px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <div class="topline">
+      <div class="brand">
+        <div class="brand-mark">💜</div><span id="brandName">DEPARTMENT WELLNESS</span>
+      </div>
+      <div class="lang-switch" aria-label="Language selector">
+        <button class="lang-btn active" id="langEn" type="button">EN</button>
+        <button class="lang-btn" id="langFr" type="button">FR</button>
+      </div>
+    </div>
+
+    <header class="hero">
+      <div class="eyebrow" id="eyebrow">Pause · Check in · Breathe</div>
+      <h1 id="mainTitle">How are you,<br><span style="color:var(--lavender-dark)">really?</span></h1>
+      <p id="heroText">You spend so much time getting through the day. Take a moment to notice how <em>you</em> are
+        doing. No judgment, no perfect answers.</p>
+    </header>
+
+    <section class="card" aria-live="polite">
+      <div id="quiz">
+        <div class="step-label"><strong id="stepName">STEP 1 OF 4</strong><span id="stepHint">Choose what feels
+            closest</span></div>
+        <div class="progress">
+          <div id="progressBar"></div>
+        </div>
+        <div id="questionArea"></div>
+        <div class="actions">
+          <button class="btn secondary" id="backBtn" type="button">← Back</button>
+          <button class="btn primary" id="nextBtn" type="button" disabled>Continue →</button>
+        </div>
+      </div>
+
+      <div id="result" class="hidden"></div>
+    </section>
+
+    <p class="privacy" id="privacyText">Your answers stay in this page and are not sent to a server by this demo. This
+      is a reflection tool, not a diagnosis or a substitute for professional support.</p>
+    <div class="footer" id="footerText">Made with care · You don't have to figure it all out today.</div>
+  </main>
+
+  <script>
+    const translations = {
+      en: {
+        brandName: "DEPARTMENT WELLNESS",
+        pill: "A moment for you",
+        eyebrow: "Pause · Check in · Breathe",
+        mainTitle: "How are you,<br><span style=\"color:var(--lavender-dark)\">really?</span>",
+        heroText: "You spend so much time getting through the day. Take a moment to notice how <em>you</em> are doing. No judgment, no perfect answers.",
+        stepHintDefault: "Take your time",
+        stepHintOptional: "Optional reflection",
+        back: "← Back",
+        continue: "Continue →",
+        finish: "See my reminder ✨",
+        restart: "↻ Check in again",
+        breathe: "Take a breath ✨",
+        done: "Done 💜",
+        privacyText: "Your answers stay in this page and are not sent to a server by this demo. This is a reflection tool, not a diagnosis or a substitute for professional support.",
+        footerText: "Made with care · You don't have to figure it all out today.",
+        question1: { title: "What is your mood right now?", hint: "Choose the sticker that feels closest. You can come back and take this check-in again whenever you need." },
+        question2: { title: "How much energy do you have today?", hint: "There is no right answer. Just notice where you are." },
+        question3: { title: "What do you need most right now?", hint: "Think of what might help you in this moment — not what you think you should need." },
+        question4: { title: "Anything else you want to acknowledge?", hint: "Optional. You can write a few words, or leave this blank. This note is not saved or sent anywhere." },
+        notePlaceholder: "Right now, I think I'm feeling…",
+        moodOptions: [
+          { value: "happy", label: "Happy", sub: "A little light" },
+          { value: "calm", label: "Calm", sub: "Steady & peaceful" },
+          { value: "stressed", label: "Stressed", sub: "Too much at once" },
+          { value: "sad", label: "Sad", sub: "Feeling low" },
+          { value: "overwhelmed", label: "Overwhelmed", sub: "Running on empty" },
+          { value: "numb", label: "Numb / unsure", sub: "Hard to put into words" },
+          { value: "lonely", label: "Lonely", sub: "Needing connection" },
+          { value: "motivated", label: "Motivated", sub: "Ready to move" },
+          { value: "angry", label: "Frustrated", sub: "Something feels wrong" }
+        ],
+        energyOptions: [
+          { value: "low", label: "Very little", sub: "I'm exhausted." },
+          { value: "medium", label: "Some energy", sub: "I'm getting through the day." },
+          { value: "high", label: "Quite a bit", sub: "I have some energy to use." }
+        ],
+        needOptions: [
+          { value: "rest", label: "Rest & peace", sub: "A pause from everything." },
+          { value: "motivation", label: "Motivation", sub: "A little push forward." },
+          { value: "understanding", label: "To feel understood", sub: "Space for what I feel." },
+          { value: "connection", label: "Connection", sub: "To feel less alone." },
+          { value: "clarity", label: "Clarity", sub: "To untangle my thoughts." },
+          { value: "joy", label: "A little joy", sub: "Something to make me smile." }
+        ],
+        resultLabels: {
+          reminder: "A reminder for this moment",
+          schoolOne: "One step at a time.",
+          schoolMessage: "You do not need to solve everything today. Take the next helpful step, and let the rest wait for a calmer moment.",
+          support: "Your answers aren't stored. This is not a diagnosis. If you feel unsafe or your distress feels hard to manage, please reach out to someone you trust or a qualified support professional."
+        },
+        result: {
+          happy: { icon: "☀️", title: "Let yourself enjoy this moment.", copy: "You don't have to wait until everything is perfect to appreciate something good. Let this moment be good without asking it to last forever.", quote: "“Pause and enjoy the good that is here. You deserve to experience it, too.”", actionTitle: "A tiny action", action: "Name one thing that feels good today. If you can, share a little kindness with someone else." },
+          calm: { icon: "🌿", title: "You can rest in this moment.", copy: "You don't need to turn every peaceful moment into something productive. It's okay to simply be here.", quote: "“Peace doesn't have to be earned through exhaustion.”", actionTitle: "A tiny action", action: "Take three slow breaths and notice one thing around you that feels pleasant." },
+          stressed: { icon: "😵‍💫", title: "You are overloaded, not weak.", copy: "When everything feels urgent, the problem is often not laziness or lack of discipline. It is overload. You are carrying too many demands at once, and your brain is trying to hold everything without a break.", quote: "“You do not need to fix your whole life in one hour. Pick the task that matters most, and let the rest wait.”", actionTitle: "A practical next step", action: "List every task in your head, then choose only one task that is truly urgent. Put the rest in a temporary list and stop trying to solve them all at once." },
+          sad: { icon: "🌧️", title: "You are allowed to feel heavy.", copy: "Sadness is not a sign that you are failing. It often means you are tired, emotionally stretched, or carrying more than you have room for. You do not need to pretend you are okay to deserve support.", quote: "“You are not weak for feeling low. You are human, and your mind is asking for gentleness.”", actionTitle: "A practical next step", action: "Do one small act of care: drink water, sit somewhere quiet, step outside for five minutes, or message one trusted person and say, ‘I’m struggling today.’" },
+          overwhelmed: { icon: "🫠", title: "Your system is asking for relief, not more pressure.", copy: "Overwhelm is not a personal failing. It happens when the amount of responsibility feels bigger than the energy available. In that state, the goal is not to be productive — it is to reduce friction and protect your attention.", quote: "“When you are overwhelmed, the best move is not to push harder. It is to remove one demand at a time.”", actionTitle: "A practical next step", action: "Put your current tasks in order of urgency. Remove or postpone the least important one. Then focus on one concrete task for 10 minutes instead of trying to handle everything at once." },
+          numb: { icon: "☁️", title: "Numbness can be a sign of exhaustion, not lack of care.", copy: "When you feel flat, detached, or unable to name what is wrong, it often means your mind is overloaded and your energy is low. This is not a sign that you are careless or broken. It is a sign that your system needs a break.", quote: "“You do not need the perfect explanation to deserve relief. You just need a small moment of care.”", actionTitle: "A practical next step", action: "Take ten minutes away from the screen. Sit still, drink water, breathe slowly, and ask yourself: ‘What is the smallest thing I can do for myself right now?’" },
+          lonely: { icon: "🫂", title: "Connection is not a luxury when you feel drained.", copy: "Loneliness can deepen when you are tired, stressed, or feeling unsupported. It does not mean you are difficult or too much. It means you need a place where you can be honest without carrying everything alone.", quote: "“You do not have to carry it all silently. One honest message can lower the weight.”", actionTitle: "A practical next step", action: "Text or speak to one person you trust and say something simple like: ‘I’m feeling tired and overwhelmed. Can I talk for a few minutes?’" },
+          motivated: { icon: "🔥", title: "Use this energy wisely, not endlessly.", copy: "Motivation is useful when it helps you move forward without burning yourself out. The goal is not to do everything; it is to choose what matters and protect momentum without pushing past your limits.", quote: "“Strong energy is valuable when it is directed, not wasted.”", actionTitle: "A practical next step", action: "Pick one meaningful task and give it a focused block of 20 minutes. Stop before you feel drained, and let that block count as real progress." },
+          angry: { icon: "🌋", title: "Frustration usually means something important is being ignored.", copy: "Anger is often a signal that something feels unfair, exhausting, or too heavy. It does not mean you are irrational. It means something inside you is saying, ‘This is too much, and I need a different response.’", quote: "“The goal is not to suppress the anger. It is to understand what it is trying to tell you.”", actionTitle: "A practical next step", action: "Pause before sending the message or making the decision. Name what is triggering you, then choose one action that is useful instead of reactive." }
+        }
+      },
+      fr: {
+        brandName: "BIEN-ÊTRE DÉPARTEMENT",
+        pill: "Un moment pour toi",
+        eyebrow: "Pause · Check-in · Respiration",
+        mainTitle: "Comment vas-tu,<br><span style=\"color:var(--lavender-dark)\">vraiment ?</span>",
+        heroText: "Tu passes beaucoup de temps à traverser la journée. Prends un instant pour remarquer comment tu te sens. Sans jugement, sans réponse parfaite.",
+        stepHintDefault: "Prends ton temps",
+        stepHintOptional: "Réflexion optionnelle",
+        back: "← Retour",
+        continue: "Continuer →",
+        finish: "Voir mon rappel ✨",
+        restart: "↻ Refaire le test",
+        breathe: "Respire ✨",
+        done: "Terminé 💜",
+        privacyText: "Tes réponses restent sur cette page et ne sont pas envoyées vers un serveur. C’est un outil de réflexion, pas un diagnostic ni un remplacement au soutien professionnel.",
+        footerText: "Fait avec soin · Tu n’as pas besoin de tout régler aujourd’hui.",
+        question1: { title: "Comment te sens-tu en ce moment ?", hint: "Choisis l’émoticône qui se rapproche le plus de ton ressenti. Tu peux refaire ce check-in quand tu le souhaites." },
+        question2: { title: "Quelle est ton niveau d’énergie aujourd’hui ?", hint: "Il n’y a pas de bonne réponse. Observe simplement ton état." },
+        question3: { title: "De quoi as-tu le plus besoin en ce moment ?", hint: "Pense à ce qui pourrait t’aider vraiment dans ce moment, pas à ce que tu penses devoir ressentir." },
+        question4: { title: "As-tu quelque chose d’autre à exprimer ?", hint: "Optionnel. Tu peux écrire quelques mots ou laisser vide. Cette note n’est ni enregistrée ni envoyée." },
+        notePlaceholder: "En ce moment, je me sens…",
+        moodOptions: [
+          { value: "happy", label: "Heureux", sub: "Un peu léger" },
+          { value: "calm", label: "Calme", sub: "Stable et serein" },
+          { value: "stressed", label: "Stressé", sub: "Trop de choses en même temps" },
+          { value: "sad", label: "Triste", sub: "Je me sens bas" },
+          { value: "overwhelmed", label: "Débordé", sub: "À bout" },
+          { value: "numb", label: "Engourdi", sub: "Difficile à exprimer" },
+          { value: "lonely", label: "Seul", sub: "Besoin de lien" },
+          { value: "motivated", label: "Motivé", sub: "Prêt à avancer" },
+          { value: "angry", label: "Frustré", sub: "Quelque chose me dérange" }
+        ],
+        energyOptions: [
+          { value: "low", label: "Très peu", sub: "Je suis épuisé." },
+          { value: "medium", label: "Un peu d’énergie", sub: "Je passe la journée." },
+          { value: "high", label: "Beaucoup", sub: "J’ai de l’énergie à utiliser." }
+        ],
+        needOptions: [
+          { value: "rest", label: "Repos et paix", sub: "Une pause de tout." },
+          { value: "motivation", label: "Motivation", sub: "Un petit coup de pouce." },
+          { value: "understanding", label: "Me sentir compris", sub: "De l’espace pour mes émotions." },
+          { value: "connection", label: "Lien", sub: "Ne plus me sentir seul." },
+          { value: "clarity", label: "Clarté", sub: "Mieux organiser mes idées." },
+          { value: "joy", label: "Un peu de joie", sub: "Quelque chose qui me fait sourire." }
+        ],
+        resultLabels: {
+          reminder: "Un rappel pour ce moment",
+          schoolOne: "Une étape à la fois.",
+          schoolMessage: "Tu n’as pas besoin de tout résoudre aujourd’hui. Fais la prochaine étape utile, et laisse le reste attendre un moment plus calme.",
+          support: "Tes réponses ne sont pas enregistrées. Ce n’est pas un diagnostic. Si tu te sens en danger ou si ton mal-être est difficile à gérer, contacte quelqu’un de confiance ou un professionnel compétent."
+        },
+        result: {
+          happy: { icon: "☀️", title: "Laisse-toi profiter de ce moment.", copy: "Tu n’as pas besoin d’attendre que tout soit parfait pour apprécier le bon. Laisse ce moment avoir une vraie valeur sans devoir tout résoudre en même temps.", quote: "“Prends une pause et profite de ce qui est déjà bien. Tu le mérites aussi.”", actionTitle: "Une action utile", action: "Nomme une chose qui te fait du bien aujourd’hui. Si possible, partage une petite forme de gentillesse avec quelqu’un." },
+          calm: { icon: "🌿", title: "Tu peux te reposer dans ce moment.", copy: "Tu n’as pas besoin de transformer chaque instant paisible en quelque chose de productif. Il est normal de simplement être là et de laisser ton esprit se calmer sans le forcer davantage.", quote: "“La paix ne doit pas être gagnée au prix de l’épuisement.”", actionTitle: "Une action utile", action: "Fais trois respirations lentes et remarque une chose autour de toi qui te semble rassurante ou agréable." },
+          stressed: { icon: "😵‍💫", title: "Tu n’es pas paresseux, tu es submergé.", copy: "Quand tout semble urgent, le problème n’est pas forcément le manque d’effort. C’est souvent trop de demandes en même temps. Ton cerveau essaie de tout retenir sans vraie pause, et c’est épuisant.", quote: "“Tu n’as pas besoin de tout corriger en une seule fois. Choisis la tâche qui compte le plus et laisse le reste attendre.”", actionTitle: "Une action concrète", action: "Écris ce qui te pèse, puis garde seulement une seule tâche vraiment urgente. Mets le reste dans une liste temporaire et mets fin à l’illusion que tu peux tout résoudre maintenant." },
+          sad: { icon: "🌧️", title: "Tu as le droit d’être fatigué émotionnellement.", copy: "La tristesse n’est pas un signe d’échec. Elle arrive souvent quand on est épuisé, stressé ou chargé au-delà de ce qu’on peut porter. Tu n’as pas besoin de jouer fort pour mériter du soutien.", quote: "“Tu n’as pas besoin d’aller mieux pour recevoir de la gentillesse.”", actionTitle: "Une action concrète", action: "Fais une petite chose de soin : bois de l’eau, assieds-toi dans un endroit calme, sors 5 minutes, ou envoie un message à une personne de confiance et dis : ‘Je suis fatigué aujourd’hui.’" },
+          overwhelmed: { icon: "🫠", title: "Ton système demande de la réduction, pas plus de pression.", copy: "Le sentiment d’être débordé ne veut pas dire que tu es incapable. Il veut dire que la charge actuelle dépasse ton énergie disponible. Dans ce cas, l’objectif n’est pas d’être plus productif, mais de diminuer la tension et protéger ton attention.", quote: "“Quand on est débordé, le bon réflexe n’est pas de pousser plus fort. C’est de retirer une charge à la fois.”", actionTitle: "Une action concrète", action: "Classe tes tâches par ordre d’urgence, puis retire ou reporte la moins importante. Puis focalise-toi sur une seule tâche réelle pendant 10 minutes au lieu d’essayer de tout faire en même temps." },
+          numb: { icon: "☁️", title: "L’engourdissement peut être un signe d’épuisement.", copy: "Quand tu te sens vide, distant ou incapable de nommer ce que tu ressens, c’est souvent parce que ton esprit est surchargé et ton énergie est basse. Ce n’est pas un signe de manque d’intérêt ni de faiblesse. C’est un signal de besoin de pause.", quote: "“Tu n’as pas besoin de tout comprendre pour avoir besoin de repos.”", actionTitle: "Une action concrète", action: "Éloigne-toi de l’écran 10 minutes, bois de l’eau, respire doucement et demande-toi : ‘Quel est le plus petit geste utile que je peux faire pour moi maintenant ?’" },
+          lonely: { icon: "🫂", title: "Le lien n’est pas un luxe quand tu es épuisé.", copy: "La solitude peut devenir plus forte quand on est fatigué, stressé ou sans soutien. Cela ne veut pas dire que tu es trop compliqué. Ça veut dire que tu as besoin d’un endroit où tu peux être honnête sans tout porter seul.", quote: "“Tu n’as pas besoin de porter tout ça en silence. Un message honnête peut déjà alléger la charge.”", actionTitle: "Une action concrète", action: "Écris à une personne de confiance un message simple : ‘Je me sens fatigué et dépassé. Est-ce que tu peux m’écouter 5 minutes ?’" },
+          motivated: { icon: "🔥", title: "Utilise cette énergie avec prudence, pas à l’infini.", copy: "La motivation est précieuse quand elle t’aide à avancer sans te vider. L’objectif n’est pas de tout faire, mais de choisir ce qui compte vraiment et garder de l’énergie pour la suite au lieu de tout brûler trop vite.", quote: "“L’énergie forte est utile quand elle est orientée, pas gaspillée.”", actionTitle: "Une action concrète", action: "Choisis une tâche importante et donne-lui 20 minutes de concentration. Arrête avant l’épuisement, et considère cela comme un progrès réel." },
+          angry: { icon: "🌋", title: "La frustration dit souvent : quelque chose est trop lourd.", copy: "La colère est souvent un signal que quelque chose te semble injuste, trop lourd ou trop fatigant. Ce n’est pas un défaut, c’est un indicateur. Elle te dit que quelque chose réclame une réponse plus consciente que réactive.", quote: "“Le but n’est pas de supprimer la colère, mais de comprendre ce qu’elle essaie de te dire.”", actionTitle: "Une action concrète", action: "Fais une pause avant d’envoyer un message ou de prendre une décision. Identifie ce qui t’a dérangé, puis choisis une réponse utile plutôt qu’une réaction impulsive." }
+        }
+      }
+    };
+
+    const questions = [
+      {
+        key: "mood",
+        type: "mood",
+        options: [
+          { value: "happy", emoji: "☀️" },
+          { value: "calm", emoji: "🌿" },
+          { value: "stressed", emoji: "😵‍💫" },
+          { value: "sad", emoji: "🌧️" },
+          { value: "overwhelmed", emoji: "🫠" },
+          { value: "numb", emoji: "☁️" },
+          { value: "lonely", emoji: "🫂" },
+          { value: "motivated", emoji: "🔥" },
+          { value: "angry", emoji: "🌋" }
+        ]
+      },
+      {
+        key: "energy",
+        type: "single",
+        options: [
+          { value: "low", emoji: "🪫" },
+          { value: "medium", emoji: "🔋" },
+          { value: "high", emoji: "⚡" }
+        ]
+      },
+      {
+        key: "need",
+        type: "single",
+        options: [
+          { value: "rest", emoji: "🛏️" },
+          { value: "motivation", emoji: "🌱" },
+          { value: "understanding", emoji: "💜" },
+          { value: "connection", emoji: "🫶" },
+          { value: "clarity", emoji: "🧭" },
+          { value: "joy", emoji: "🌈" }
+        ]
+      },
+      {
+        key: "note",
+        type: "textarea"
+      }
+    ];
+
+    const answers = { mood: "", energy: "", need: "", note: "" };
+    let currentStep = 0;
+    let language = "en";
+    const questionArea = document.getElementById("questionArea");
+    const nextBtn = document.getElementById("nextBtn");
+    const backBtn = document.getElementById("backBtn");
+    const progressBar = document.getElementById("progressBar");
+    const stepName = document.getElementById("stepName");
+    const stepHint = document.getElementById("stepHint");
+    const langEn = document.getElementById("langEn");
+    const langFr = document.getElementById("langFr");
+    const idMap = {
+      brandName: document.getElementById("brandName"),
+      eyebrow: document.getElementById("eyebrow"),
+      mainTitle: document.getElementById("mainTitle"),
+      heroText: document.getElementById("heroText"),
+      privacyText: document.getElementById("privacyText"),
+      footerText: document.getElementById("footerText")
+    };
+
+    function t(key) {
+      return translations[language][key];
+    }
+
+    function getByValue(items, value) {
+      return items.find(item => item.value === value) || items[0];
+    }
+
+    function applyLanguage() {
+      langEn.classList.toggle("active", language === "en");
+      langFr.classList.toggle("active", language === "fr");
+      idMap.brandName.textContent = t("brandName");
+      idMap.eyebrow.textContent = t("eyebrow");
+      idMap.mainTitle.innerHTML = t("mainTitle");
+      idMap.heroText.innerHTML = t("heroText");
+      idMap.privacyText.textContent = t("privacyText");
+      idMap.footerText.textContent = t("footerText");
+      renderQuestion();
+    }
+
+    function selectAnswer(key, value) {
+      answers[key] = value;
+      renderQuestion();
+      if (currentStep < questions.length - 1) {
+        setTimeout(() => {
+          currentStep++;
+          renderQuestion();
+        }, 220);
+      }
+    }
+
+    function renderQuestion() {
+      const q = questions[currentStep];
+      const currentStrings = t(`question${currentStep + 1}`) || {};
+      stepName.textContent = `STEP ${currentStep + 1} OF ${questions.length}`;
+      if (language === "fr") {
+        stepName.textContent = `ÉTAPE ${currentStep + 1} SUR ${questions.length}`;
+      }
+      stepHint.textContent = currentStep === 3 ? t("stepHintOptional") : t("stepHintDefault");
+      progressBar.style.width = `${((currentStep + 1) / questions.length) * 100}%`;
+      backBtn.style.visibility = currentStep === 0 ? "hidden" : "visible";
+      backBtn.textContent = t("back");
+      nextBtn.textContent = currentStep === questions.length - 1 ? t("finish") : t("continue");
+      nextBtn.disabled = q.type !== "textarea" && !answers[q.key];
+
+      let html = `<div class="fade-in"><h2 class="question">${currentStrings.title || ""}</h2><p class="hint">${currentStrings.hint || ""}</p>`;
+
+      if (q.type === "mood") {
+        const options = t("moodOptions");
+        html += `<div class="moods">` + q.options.map(o => {
+          const option = getByValue(options, o.value);
+          return `
+            <button type="button" class="mood ${answers[q.key] === o.value ? "selected" : ""}" data-key="${q.key}" data-value="${o.value}" aria-pressed="${answers[q.key] === o.value}">
+              <span class="sticker" aria-hidden="true">${o.emoji}</span><strong>${option.label}</strong><small>${option.sub}</small>
+            </button>`;
+        }).join("") + `</div>`;
+      } else if (q.type === "single") {
+        const options = q.key === "energy" ? t("energyOptions") : t("needOptions");
+        html += `<div class="choices">` + q.options.map(o => {
+          const option = getByValue(options, o.value);
+          return `
+            <button type="button" class="choice ${answers[q.key] === o.value ? "selected" : ""}" data-key="${q.key}" data-value="${o.value}" aria-pressed="${answers[q.key] === o.value}">
+              <span class="dot" aria-hidden="true"></span><span style="font-size:23px">${o.emoji}</span><span><strong>${option.label}</strong><br><small style="color:var(--muted)">${option.sub}</small></span>
+            </button>`;
+        }).join("") + `</div>`;
+      } else {
+        html += `<textarea class="field" id="noteField" maxlength="600" placeholder="${t("notePlaceholder")}">${escapeHtml(answers.note)}</textarea>`;
+      }
+      html += `</div>`;
+      questionArea.innerHTML = html;
+      questionArea.querySelectorAll("[data-key]").forEach(btn => btn.addEventListener("click", () => {
+        selectAnswer(btn.dataset.key, btn.dataset.value);
+      }));
+      const noteField = document.getElementById("noteField");
+      if (noteField) noteField.addEventListener("input", e => {
+        answers.note = e.target.value;
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[ch]));
+    }
+
+    function analyzeNote() {
+      const note = (answers.note || "").trim().toLowerCase();
+      const checks = {
+        exhausted: /(fatigu|épuis|vide|sans energie|sans énergie|trop faible|trop fatigu|lass|effort.*rien)/i,
+        confused: /(confus|brouill|perdu|désorient|décourag|je ne sais pas|je suis perdu|je suis confuse)/i,
+        noProgress: /(rien n(?:'| )arrive|rien ne change|ne change pas|sans résultat|aucun effet|effort.*rien|peine.*rien)/i,
+        emotionalPain: /(joie|tristesse|émotion|émotions|ressentir|ressens|ça me fait mal|je sens)/i,
+        numb: /(vide|engourdi|indiff|sans réaction|sans feeling|sans émotion|ne sens plus)/i,
+        burden: /(charge|surcharge|débord|submerg|trop de choses|trop lourd|poids)/i,
+        danger: /(je veux me suicider|je veux mourir|je veux me tuer|je veux disparaître|je ne veux plus vivre|je me sens fini|je veux m'en finir|suicide|m'éteindre|finir ma vie|i want to die|i want to kill myself|i want to end my life|i want to disappear|i do not want to live|kill myself|end my life|suicidal thoughts|i am done with life|i can't go on)/i
+      };
+
+      return Object.entries(checks)
+        .filter(([, regex]) => regex.test(note))
+        .map(([key]) => key);
+    }
+
+    function getResult() {
+      const mood = answers.mood;
+      const need = answers.need;
+      const energy = answers.energy;
+      const resultData = t("result");
+      const base = resultData[mood] || resultData.numb;
+      const noteSignals = analyzeNote();
+      let copy = base.copy;
+      let title = base.title;
+      let action = base.action;
+
+      if (noteSignals.includes("danger")) {
+        if (language === "fr") {
+          return {
+            icon: "🚨",
+            title: "Tu as besoin d’aide immédiate.",
+            copy: "Je suis vraiment désolé que tu te sentes comme ça. Si tu penses à te faire du mal ou à te suicider, appelle immédiatement le 112 ou le 15. Si tu peux, contacte aussi quelqu’un de confiance et reste avec cette personne jusqu’à ce que de l’aide arrive. Ton numéro de contact de l’école : 01 40 90 12 57.",
+            quote: "“Ne reste pas seul avec ce moment. Demande de l’aide maintenant.”",
+            actionTitle: "Actions immédiates",
+            action: "Appelle le 112 ou le 15 maintenant. Ensuite appelle 01 40 90 12 57. Si tu peux, envoie un message à une personne de confiance et demande-lui de rester avec toi."
+          };
+        }
+
+        return {
+          icon: "🚨",
+          title: "You need immediate support.",
+          copy: "I am really sorry you are feeling like this. If you are thinking about harming yourself or ending your life, call 112 or 999 immediately. If you can, contact someone you trust and stay with them until help arrives. Your school contact: 01 40 90 12 57.",
+          quote: "“Do not carry this alone. Get help right now.”",
+          actionTitle: "Immediate steps",
+          action: "Call 112 or 999 now. Then call 01 40 90 12 57. If possible, text or call someone you trust and ask them to stay with you until help arrives."
+        };
+      }
+
+      const exhaustedState = noteSignals.includes("exhausted") || noteSignals.includes("noProgress") || noteSignals.includes("burden");
+      const emotionalOverload = noteSignals.includes("confused") || noteSignals.includes("emotionalPain") || noteSignals.includes("numb");
+
+      if (exhaustedState) {
+        if (language === "fr") {
+          title = "Tu n’es pas paresseux·se. Tu es épuisé·e.";
+          copy = "Ce que tu décris n’est pas simplement une mauvaise journée. C’est le signe que ton énergie mentale et émotionnelle est au bord de la rupture. Tu fais des efforts, tu essaies de tenir, et pourtant rien ne semble réellement te soulager. Ce n’est pas un défaut de discipline ni un manque de volonté : c’est un signal clair que la charge est trop élevée pour continuer sans réduction.";
+          action = "Retire une seule chose qui pèse inutilement dans ta journée : une demande, une tâche, ou une attente de toi-même. Ensuite, donne-toi un vrai moment de repos sans te justifier. Le but n’est pas de tout résoudre, mais d’ouvrir un espace de récupération.";
+        } else {
+          title = "You are not lazy. You are exhausted.";
+          copy = "What you are describing is not just a bad day. It is a sign that your mental and emotional energy is close to breaking point. You are trying, pushing, and holding it together, but nothing seems to give you true relief. This is not a lack of discipline or willpower. It is a clear sign that the load is too heavy to keep carrying without less pressure and more recovery.";
+          action = "Remove one thing that is weighing on you today: one task, one demand, or one expectation you place on yourself. Then give yourself a real break without explaining or defending it. The goal is not to fix everything, but to create space for recovery.";
+        }
+      }
+
+      if (emotionalOverload) {
+        if (language === "fr") {
+          title = "Tu n’as pas besoin de tout comprendre pour savoir que ça pèse.";
+          copy = "Quand la confusion, la fatigue et la douleur émotionnelle se mélangent, cela veut souvent dire que ton cerveau est saturé. Les émotions ne deviennent pas moins lourdes parce que tu essaies d’être plus fort. Elles deviennent plus difficiles à porter quand tu n’as ni espace, ni pause, ni répit. Ce que tu vis n’est pas un manque de lucidité : c’est un signal que tu as besoin d’un ralentissement réel.";
+          action = "Écris seulement trois mots pour ton état actuel : fatigué, confus, ou dépassé. Puis laisse le reste attendre. Tu n’as pas besoin de résoudre toute la situation pour faire un premier geste de soulagement.";
+        } else {
+          title = "You do not need to understand everything to know it is heavy.";
+          copy = "When confusion, exhaustion, and emotional pain pile up together, it often means your mind is overloaded. Emotions do not become lighter because you try to be stronger. They become harder to carry when there is no space, no pause, and no relief. What you are feeling is not a sign of weakness or poor judgment. It is a sign that you need a real reduction in pressure.";
+          action = "Write only three words for how you feel right now: tired, confused, or overwhelmed. Then let the rest wait. You do not need to solve the whole situation to take the first step toward relief.";
+        }
+      }
+
+      if (noteSignals.includes("noProgress") || noteSignals.includes("burden")) {
+        if (language === "fr") {
+          copy += " Ce que tu décris ressemble aussi à une sensation d’effort sans résultat : chaque tentative semble consommer de l’énergie sans laisser de vrai repos. Dans ce cas, le bon objectif n’est pas d’être plus fort, mais de diminuer la charge et de choisir moins d’exigence.";
+        } else {
+          copy += " What you describe also sounds like effort without relief: every attempt seems to cost energy without creating real space. In that case, the goal is not to become stronger, but to lower the demands and choose less pressure.";
+        }
+      }
+
+      if (energy === "low") {
+        copy += language === "fr"
+          ? " Le plus important n’est pas de tout corriger. Commence par enlever une tâche inutile, boire de l’eau et donner à ton esprit 10 minutes sans pression."
+          : " The most useful move is not to fix everything. Start by removing one unnecessary task, drinking water, and giving your mind 10 quiet minutes without pressure.";
+      }
+      if (need === "clarity") copy += language === "fr" ? " Tu n’as pas besoin de trouver toute la réponse maintenant. Sépare ce qui est urgent de ce qui est simplement fatigant." : " You do not need the full answer today. Separate what is truly urgent from what is simply draining.";
+      if (need === "rest" && energy === "low") copy += language === "fr" ? " Comme ton énergie est basse, la bonne décision est de réduire la charge, pas de te faire davantage culpabiliser." : " Because your energy is low, the wise move is to reduce the load rather than push harder and feel worse.";
+      if (need === "motivation") copy += language === "fr" ? " Fais une seule petite action, pas une transformation totale." : " Choose one small action instead of trying to transform everything at once.";
+      if (need === "connection") copy += language === "fr" ? " Un message honnête à une personne de confiance peut alléger la charge immédiatement." : " One honest message to someone safe can lighten the pressure immediately.";
+      if (need === "understanding") copy += language === "fr" ? " Tu n’as pas besoin de tout expliquer pour mériter d’être entendu." : " You do not need to explain everything perfectly to deserve to be heard.";
+      if (need === "joy") copy += language === "fr" ? " Choisis une petite source de légèreté qui ne demande pas beaucoup d’effort." : " Choose one small source of relief that does not require much effort.";
+      if (need === "rest") copy += language === "fr" ? " Donne-toi la permission de faire une vraie pause, sans te justifier." : " Give yourself permission to rest without needing to justify it.";
+
+      return { ...base, title, copy, action };
+    }
+
+    function showResult() {
+      document.getElementById("quiz").classList.add("hidden");
+      const result = document.getElementById("result");
+      const r = getResult();
+      result.classList.remove("hidden");
+      result.innerHTML = `
+        <div class="center fade-in">
+          <div class="eyebrow">${language === "fr" ? t("resultLabels").reminder : t("resultLabels").reminder}</div>
+          <div class="result-icon" aria-hidden="true">${r.icon}</div>
+          <h2 class="result-title">${r.title}</h2>
+          <p class="result-copy">${r.copy}</p>
+          <div class="quote">${r.quote}</div>
+          <div class="action-box"><h3>${r.actionTitle}</h3><p>${r.action}</p></div>
+          <p class="privacy">${language === "fr" ? t("resultLabels").support : t("resultLabels").support}</p>
+          <div class="actions">
+            <button class="btn secondary" id="restartBtn" type="button">${language === "fr" ? t("restart") : t("restart")}</button>
+            <button class="btn primary" id="finishBtn" type="button">${language === "fr" ? t("breathe") : t("breathe")}</button>
+          </div>
+        </div>`;
+      document.getElementById("restartBtn").addEventListener("click", restart);
+      document.getElementById("finishBtn").addEventListener("click", () => {
+        result.querySelector(".result-title").textContent = language === "fr" ? t("resultLabels").schoolOne : "One moment at a time.";
+        result.querySelector(".result-copy").textContent = language === "fr" ? t("resultLabels").schoolMessage : "You don't have to leave this page with all the answers. Take what helps, leave what doesn't, and be gentle with yourself as you continue your day.";
+        document.getElementById("finishBtn").textContent = language === "fr" ? t("done") : t("done");
+        document.getElementById("finishBtn").disabled = true;
+      });
+    }
+
+    function restart() {
+      answers.mood = "";
+      answers.energy = "";
+      answers.need = "";
+      answers.note = "";
+      currentStep = 0;
+      document.getElementById("result").classList.add("hidden");
+      document.getElementById("quiz").classList.remove("hidden");
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    langEn.addEventListener("click", () => {
+      language = "en";
+      applyLanguage();
+    });
+
+    langFr.addEventListener("click", () => {
+      language = "fr";
+      applyLanguage();
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentStep < questions.length - 1) {
+        currentStep++;
+        renderQuestion();
+      } else {
+        showResult();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+    backBtn.addEventListener("click", () => {
+      if (currentStep > 0) {
+        currentStep--;
+        renderQuestion();
+      }
+    });
+
+    applyLanguage();
+  </script>
+</body>
+
+</html>
